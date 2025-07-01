@@ -6,7 +6,8 @@ class OrderItemInline(admin.TabularInline):
     extra = 1
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'customer', 'status', 'date', 'total_items', 'total_price')
+    list_display = ('order_id', 'customer', 'status', 'date')
+    readonly_fields = ('total_items', 'total_price')
     inlines = [OrderItemInline]
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('order', 'product', 'quantity')

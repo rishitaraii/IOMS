@@ -18,10 +18,6 @@ class Orders(models.Model):
     total_items = models.PositiveIntegerField(default=0)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    def update_totals(self):
-        self.total_items = sum(item.quantity for item in self.items.all())
-        self.total_price = sum(item.product.price * item.quantity for item in self.items.all())
-        self.save()
 
 class OrderItem(models.Model):
     order=models.ForeignKey(Orders, related_name='items', on_delete=models.CASCADE)

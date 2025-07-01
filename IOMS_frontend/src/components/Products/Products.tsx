@@ -3,16 +3,8 @@ import { useEffect, useState} from "react";
 import {fetchProducts, deleteProduct}from "../../api/axios";
 import {Button, Box,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,IconButton,} from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
-
-interface Product {
-  id: number;
-  name: string;
-  sku: string;
-  price: number;
-  stock_quantity: number;
-  status: string;
-}
-
+import type { Product } from "../../types/types"; // Adjust the import path as necessary
+import {useNavigate,} from "react-router-dom";
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -38,9 +30,13 @@ const Products: React.FC = () => {
       console.error("Failed to delete product", error);
     }
   };
+  const navigate = useNavigate();
 
   const handleAddProduct = () => {
-    console.log("Add Product button clicked");
+    navigate("/products/create");
+  };
+  const handleEditProduct = (id: number) => {
+    navigate(`/products/${id}/edit`); 
   };
 
     return (
@@ -57,8 +53,8 @@ const Products: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -79,7 +75,7 @@ const Products: React.FC = () => {
                 <TableCell>{product.status}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleDelete(product.id)}><Delete /></IconButton>
-                  <IconButton onClick={() => console.log("Edit product", product)}><Edit /></IconButton>
+                  <IconButton onClick={() => handleEditProduct(product.id)}><Edit /></IconButton>
                 </TableCell>
               </TableRow>
             ))}

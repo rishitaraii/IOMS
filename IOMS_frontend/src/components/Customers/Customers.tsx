@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { useEffect, useState} from "react";
-import {fetchCustomer, deleteCustomer, updateCustomer}from "../../api/axios";
+import {fetchCustomers, deleteCustomer}from "../../api/axios";
 import {Button, Box,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,IconButton,} from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
-
+import { useNavigate } from "react-router-dom";
 interface Customer {
   id: number; 
   name: string;
@@ -16,13 +16,14 @@ const Customers: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
    const loadCustomers = async () => {
     try { 
-      const response = await fetchCustomer(); 
+      const response = await fetchCustomers(); 
       console.log("Fetched customers:", response.data);
       setCustomers(response.data); 
     } catch (error) {
       console.error("Failed to fetch customers", error);  
     }
   };
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadCustomers();
@@ -37,16 +38,11 @@ const Customers: React.FC = () => {
     }
   };
   const handleAddCustomer = () => {
-    console.log("Add Customer button clicked");
+    navigate("/customers/create");
   };
 
-  const handleEditCustomer = async (id: number, updatedCustomer: Customer) => {
-    try {
-      await updateCustomer(id, updatedCustomer);
-      loadCustomers(); 
-    } catch (error) {
-      console.error("Failed to update customer", error);
-    }
+  const handleEditCustomer = async (id: number) => {
+    navigate(`/customers/${id}/edit`)
   };
   
   return (
@@ -63,8 +59,8 @@ const Customers: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -82,7 +78,7 @@ const Customers: React.FC = () => {
                 <TableCell>{customer.phone}</TableCell>
                 <TableCell>{customer.address}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleEditCustomer(customer.id, customer)}>
+                  <IconButton onClick={() => handleEditCustomer(customer.id)}>
                     <Edit />
                   </IconButton>
                   <IconButton onClick={() => handleDelete(customer.id)}>

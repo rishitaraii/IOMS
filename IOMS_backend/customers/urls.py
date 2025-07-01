@@ -1,10 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import CustomerViewSet
+# Customers/urls.py
 
-router = DefaultRouter()
-router.register(r'customers', CustomerViewSet)
+from django.urls import path
+from .views import CustomerListView, CustomerDetailView, CustomerCreateView, CustomerUpdateView, CustomerDeleteView
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', CustomerListView.as_view(), name='order-list'),               # GET /api/orders/
+    path('<int:pk>/', CustomerDetailView.as_view(), name='order-detail'),  # GET /api/orders/5/
+    path('create/', CustomerCreateView.as_view(), name='order-create'),    # POST
+    path('<int:pk>/update/', CustomerUpdateView.as_view(), name='order-update'),  # PUT
+    path('<int:pk>/delete/', CustomerDeleteView.as_view(), name='order-delete'),  # DELETE
 ]
