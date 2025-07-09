@@ -1,26 +1,24 @@
-# Python
+# === Python / Django ===
 __pycache__/
 *.py[cod]
+*.pyo
+*.log
 *.sqlite3
 db.sqlite3
-*.log
-*.pot
-*.pyc
 .env
 env/
 venv/
-*.pyo
 
-# Django media/static (if generated locally)
-media/
+# Django static/media files
 staticfiles/
+media/
 
-# React
+# === React / TypeScript ===
 node_modules/
 dist/
 build/
-.npm/
 .vite/
+.npm/
 
 # React environment files
 .env.local
@@ -28,21 +26,25 @@ build/
 .env.production
 .env.test
 
-# VS Code settings
+# === VS Code / IDEs ===
 .vscode/
+.idea/
 
-# Mac/Linux system files
-.DS_Store
+# === Windows system files ===
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Coverage and testing
+# === Test / Coverage ===
+coverage/
 htmlcov/
-.coverage
 .pytest_cache/
-coverage.xml
 *.cover
+.coverage
+coverage.xml
 
-# Others
+# === Misc ===
 *.bak
 *.swp
 *.tmp
+*.log
