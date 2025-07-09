@@ -1,1 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
 db.sqlite3
+*.log
+*.pot
+*.pyc
+.env
+env/
+venv/
+*.pyo
+
+# Django media/static (if generated locally)
+media/
+staticfiles/
+
+# React
+node_modules/
+dist/
+build/
+.npm/
+.vite/
+
+# React environment files
+.env.local
+.env.development
+.env.production
+.env.test
+
+# VS Code settings
+.vscode/
+
+# Mac/Linux system files
+.DS_Store
+Thumbs.db
+
+# Coverage and testing
+htmlcov/
+.coverage
+.pytest_cache/
+coverage.xml
+*.cover
+
+# Others
+*.bak
+*.swp
+*.tmp
