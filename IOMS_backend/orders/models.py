@@ -18,6 +18,7 @@ class Orders(models.Model):
     total_items = models.PositiveIntegerField(default=0)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    
 
 class OrderItem(models.Model):
     order=models.ForeignKey(Orders, related_name='items', on_delete=models.CASCADE)

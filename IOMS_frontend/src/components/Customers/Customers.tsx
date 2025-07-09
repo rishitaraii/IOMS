@@ -1,29 +1,30 @@
-import { Typography } from "@mui/material";
-import { useEffect, useState} from "react";
+import {Typography } from "@mui/material";
+import {useEffect,useState} from "react";
 import {fetchCustomers, deleteCustomer}from "../../api/axios";
-import {Button, Box,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,IconButton,} from "@mui/material";
+import {Button, Box,IconButton} from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-interface Customer {
-  id: number; 
-  name: string;
-  email: string;  
-  phone: string;
-  address: string;
-}
-
+import type { Customer } from "../../types/types";
+import {useNavigate,} from "react-router-dom";
+import {DataGrid} from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
+import type { GridColDef } from '@mui/x-data-grid'
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 const Customers: React.FC = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-   const loadCustomers = async () => {
-    try { 
-      const response = await fetchCustomers(); 
-      console.log("Fetched customers:", response.data);
-      setCustomers(response.data); 
+  const [Customers, setCustomers] = useState<Customer[]>([]);
+  const navigate = useNavigate();
+  const [paginationModel, setPaginationModel] = useState({
+  page: 0,
+  pageSize: 10,
+});
+
+  const loadCustomers = async () => {
+    try {
+      const response = await fetchCustomers();
+      setCustomers(response.data);
     } catch (error) {
-      console.error("Failed to fetch customers", error);  
+      console.error("Failed to fetch Customers", error);
     }
   };
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadCustomers();
@@ -31,22 +32,44 @@ const Customers: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteCustomer(id); 
-      loadCustomers(); 
+      await deleteCustomer(id);
+      loadCustomers();
     } catch (error) {
-      console.error("Failed to delete customer", error);
+      console.error("Failed to delete Customer", error);
     }
   };
+
   const handleAddCustomer = () => {
-    navigate("/customers/create");
+    navigate("/Customers/create");
   };
 
-  const handleEditCustomer = async (id: number) => {
-    navigate(`/customers/${id}/edit`)
+  const handleEditCustomer = (id: number) => {
+    navigate(`/Customers/${id}/edit`);
   };
-  
+
+    
+
+  const columns: GridColDef[] = [
+    { field: "name", headerName: "Name", flex: 1 },
+    { field: "email", headerName: "email", flex: 1 },
+    { field: "phone", headerName: "phone", flex: 1, type: "number" },
+    { field: "address", headerName: "address", flex: 1, type: "number",},
+    {field: "actions", headerName: "Actions", flex: 1, sortable: false, filterable: false,
+       renderCell: (params: GridRenderCellParams) => (
+        <>
+          <IconButton onClick={() => handleEditCustomer(params.row.id)}>
+            <Edit />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(params.row.id)}>
+            <Delete />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
   return (
-    <Box> 
+    <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h4">Customers</Typography>
         <Button
@@ -59,37 +82,36 @@ const Customers: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {customers.map((customer) => (
-              <TableRow key={customer.id}>
-                <TableCell>{customer.name}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.phone}</TableCell>
-                <TableCell>{customer.address}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleEditCustomer(customer.id)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(customer.id)}>
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box sx={{ height: 500, width: "100%" }}>
+        <DataGrid
+          rows={Customers}
+          columns={columns}
+          getRowId={(row) => row.id}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[5, 10, 25]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterLogicOperator: GridLogicOperator.Or,
+              },
+            },
+          }}
+          slotProps={{
+            toolbar: {
+              quickFilterProps: {
+                quickFilterParser: (searchInput: string) =>
+                  searchInput
+                    .split(',')
+                    .map((value) => value.trim())
+                    .filter((value) => value !== ''),
+              },
+            },
+          }}
+          showToolbar
+        />
+      </Box>
     </Box>
   );
 };

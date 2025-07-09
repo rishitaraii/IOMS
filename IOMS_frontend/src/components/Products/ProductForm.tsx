@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Stack,
-  MenuItem,
-} from "@mui/material";
+import {Box,Button,TextField,Typography,Stack,MenuItem} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  fetchProduct,
-  createProduct,
-  updateProduct,
-} from "../../api/axios";
+import {fetchProduct,createProduct,updateProduct} from "../../api/axios";
 import type { Product, ProductInput } from "../../types/types";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";

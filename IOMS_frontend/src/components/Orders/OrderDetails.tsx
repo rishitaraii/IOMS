@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { fetchOrder } from "../../api/axios";
 import type { Order} from "../../types/types";
 import {Typography,Box,Card,CardContent,List,ListItem,ListItemText,} from "@mui/material";
-
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router-dom";
 const OrderDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const loadOrder = async () => {
       try {
@@ -27,9 +29,16 @@ const OrderDetails: React.FC = () => {
 
   return (
     <Box>
+      <Box display={"flex"} justifyContent={"flex-end"}>
+       <IconButton onClick={() => navigate("/orders")}>
+        <CloseIcon />
+        </IconButton>
+      </Box>
       <Typography variant="h4" gutterBottom>
         Order #{order.order_id}
       </Typography>
+    
+   
 
       <Card sx={{ mb: 4 }}>
         <CardContent>
@@ -47,7 +56,7 @@ const OrderDetails: React.FC = () => {
           <Typography>Status: {order.status}</Typography>
           <Typography>Date: {new Date(order.date).toLocaleString()}</Typography>
           <Typography>Total Items: {order.total_items}</Typography>
-          <Typography>Total Price: ₹{order.total_price}</Typography>
+          <Typography>Total Price: ${order.total_price}</Typography>
         </CardContent>
       </Card>
 
